@@ -5,6 +5,7 @@ namespace PdsTakehome.Services
 {
     public class GameOptionsService : IGameOptions 
     {
+
         public GameOptions PromptForOptions()
         {
             Console.WriteLine("Select game type:");
@@ -35,6 +36,19 @@ namespace PdsTakehome.Services
 
                 Console.WriteLine("Invalid size. Try again.");
             }
+        }
+        public bool AskToPlayAgain()
+        {
+            Console.Write("Do you want to play again? (y/n): ");
+            string? input = Console.ReadLine()?.Trim().ToLower();
+
+            if (string.IsNullOrEmpty(input))
+            {
+                Console.WriteLine("Invalid input. Defaulting to 'no'.");
+                return false;
+            }
+
+            return input == "y" || input == "yes";
         }
     }
 }

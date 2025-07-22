@@ -5,5 +5,6 @@ namespace PdsTakehome.Interfaces
     public interface IGameOptions
     {
         GameOptions PromptForOptions();
+        bool AskToPlayAgain();
     }
 }

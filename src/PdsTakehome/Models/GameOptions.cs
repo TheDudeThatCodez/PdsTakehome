@@ -3,7 +3,7 @@ namespace PdsTakehome.Models
     public sealed class GameOptions
     {
         public GameType Mode { get; }
-        public int Size { get; }   
+        public int Size { get; }
 
         private GameOptions(GameType mode, int size)
         {
@@ -21,5 +21,11 @@ namespace PdsTakehome.Models
         }
 
         public bool IsStandard => Mode == GameType.Standard;
+
+        public void DisplayOptions(string CurrentPlayer = "X")
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Game Mode: {Mode} | Board Size: {Size}x{Size} | Current Player: {CurrentPlayer}" );
+        }
     }
 }

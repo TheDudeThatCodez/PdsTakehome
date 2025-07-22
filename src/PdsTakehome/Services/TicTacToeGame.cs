@@ -9,12 +9,13 @@ public class TicTacToeGame : ITicTacToeGame
     private Player currentPlayer;
     private readonly Player playerX;
     private readonly Player playerO;
+    private readonly GameOptions _gameOptions;
+    private readonly ResultDisplay _resultDisplay;
 
-    public TicTacToeGame(GameOptions gameOptions)
+    public TicTacToeGame(GameOptions gameOptions, ResultDisplay resultDisplay)
     {
-        if (gameOptions == null)
-            throw new ArgumentNullException(nameof(gameOptions), "Game options cannot be null.");
-
+        _gameOptions = gameOptions ?? throw new ArgumentNullException(nameof(gameOptions), "Game options cannot be null.");
+        _resultDisplay = resultDisplay ?? throw new ArgumentNullException(nameof(resultDisplay), "Result display cannot be null.");
         board = new Board(gameOptions.Size);
         playerX = new Player("Player X", 'X');
         playerO = new Player("Player O", 'O');
@@ -23,13 +24,10 @@ public class TicTacToeGame : ITicTacToeGame
 
     public void StartGame()
     {
-        bool firstMove = true;
         while (true)
         {
-            if (!firstMove)
-            {
-                Console.Clear();
-            }
+            Console.Clear();
+            GetGameOptionsDisplay();
             GetBoardDisplay();
             Console.WriteLine($"\n{currentPlayer.Name}'s turn ({currentPlayer.Symbol}). Enter a position (row x col):");
 
@@ -41,25 +39,22 @@ public class TicTacToeGame : ITicTacToeGame
                 if (CheckWinner())
                 {
                     Console.Clear();
+                    GetGameOptionsDisplay();
                     GetBoardDisplay();
-                    Console.WriteLine($"\n{currentPlayer.Name} wins!");
-                    Console.WriteLine("Press Enter to exit...");
-                    Console.ReadLine();
+                    GetWinnerDisplay();
                     break;
                 }
 
                 if (CheckTie())
                 {
                     Console.Clear();
+                    GetGameOptionsDisplay();
                     GetBoardDisplay();
-                    Console.WriteLine("\nIt's a tie!");
-                    Console.WriteLine("Press Enter to exit...");
-                    Console.ReadLine();
+                    GetTieDisplay();
                     break;
                 }
 
                 SwitchPlayer();
-                firstMove = false;
             }
             catch (Exception ex)
             {
@@ -191,6 +186,21 @@ public class TicTacToeGame : ITicTacToeGame
     public void GetBoardDisplay()
     {
         board.DisplayBoard();
+    }
+
+    public void GetGameOptionsDisplay()
+    {
+        _gameOptions.DisplayOptions(currentPlayer.Name);
+    }
+
+    public void GetWinnerDisplay()
+    {
+        _resultDisplay.DisplayWinner(currentPlayer.Name);
+    }
+
+    public void GetTieDisplay()
+    {
+        _resultDisplay.DisplayTie();
     }
 
     public Player GetCurrentPlayer()
