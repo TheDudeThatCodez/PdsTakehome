@@ -1,10 +1,9 @@
-﻿using PdsTakehome.Models;
-using PdsTakehome.Services;
+﻿using PdsTakehome.Services;
+using PdsTakehome.Models;
 
 
-Console.WriteLine("Welcome to Tic Tac Toe!");
+var gameOptionsService = new GameOptionsService();
+GameOptions options = gameOptionsService.PromptForOptions();
 
-TicTacToeGame game = new();
+TicTacToeGame game = new(options);
 game.StartGame();
-
-game.GetBoardDisplay();

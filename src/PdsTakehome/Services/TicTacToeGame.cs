@@ -10,9 +10,12 @@ public class TicTacToeGame : ITicTacToeGame
     private readonly Player playerX;
     private readonly Player playerO;
 
-    public TicTacToeGame()
+    public TicTacToeGame(GameOptions gameOptions)
     {
-        board = new Board();
+        if (gameOptions == null)
+            throw new ArgumentNullException(nameof(gameOptions), "Game options cannot be null.");
+
+        board = new Board(gameOptions.Size);
         playerX = new Player("Player X", 'X');
         playerO = new Player("Player O", 'O');
         currentPlayer = playerX;
@@ -20,9 +23,13 @@ public class TicTacToeGame : ITicTacToeGame
 
     public void StartGame()
     {
+        bool firstMove = true;
         while (true)
         {
-            Console.Clear();
+            if (!firstMove)
+            {
+                Console.Clear();
+            }
             GetBoardDisplay();
             Console.WriteLine($"\n{currentPlayer.Name}'s turn ({currentPlayer.Symbol}). Enter a position (row x col):");
 
@@ -30,7 +37,7 @@ public class TicTacToeGame : ITicTacToeGame
             {
                 Position position = GetPlayerInput();
                 UpdateBoard(position);
-                
+
                 if (CheckWinner())
                 {
                     Console.Clear();
@@ -40,7 +47,7 @@ public class TicTacToeGame : ITicTacToeGame
                     Console.ReadLine();
                     break;
                 }
-                
+
                 if (CheckTie())
                 {
                     Console.Clear();
@@ -52,6 +59,7 @@ public class TicTacToeGame : ITicTacToeGame
                 }
 
                 SwitchPlayer();
+                firstMove = false;
             }
             catch (Exception ex)
             {
@@ -78,16 +86,15 @@ public class TicTacToeGame : ITicTacToeGame
         // Clean input to handle cases like "1x1", "1 X 1", etc.
         var cleanedInput = input.Split([' ', 'x', 'X'], StringSplitOptions.RemoveEmptyEntries);
         if (cleanedInput.Length < 2 || cleanedInput.Length > 2)
-        {
             throw new ArgumentException("Invalid input format. Please enter in the format 'row x col'.");
-        }
 
         var row = int.Parse(cleanedInput[0]) - 1;
         var col = int.Parse(cleanedInput[1]) - 1;
         if (row < 0 || row > board.Size || col < 0 || col > board.Size)
-        {
             throw new ArgumentException("Invalid position. Please enter a valid row and column.");
-        }
+
+        if (board.Cells[row, col] != ' ')
+            throw new ArgumentException("Position already taken. Please choose another position.");
     }
 
     public Position ParseInput(string input) 

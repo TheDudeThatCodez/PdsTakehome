@@ -10,10 +10,5 @@ namespace PdsTakehome.Models
             Row = row;
             Column = column;
         }
-
-        public override string ToString()
-        {
-            return $"{Row + 1}x{Column + 1}";
-        }
     }
 }

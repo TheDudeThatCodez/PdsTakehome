@@ -7,6 +7,8 @@ namespace PdsTakehome.Models
 
         public Board(int size = 3)
         {
+            if (size < 3)
+                throw new ArgumentOutOfRangeException(nameof(size), "Board size must be 3 or greater.");
             Size = size;
             Cells = new char[size, size];
             InitializeBoard();
