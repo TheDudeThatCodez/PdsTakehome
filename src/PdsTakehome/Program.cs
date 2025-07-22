@@ -1,7 +1,6 @@
 ﻿using PdsTakehome.Services;
 using PdsTakehome.Models;
 
-
 var gameOptionsService = new GameOptionsService();
 GameOptions options = gameOptionsService.PromptForOptions();
 

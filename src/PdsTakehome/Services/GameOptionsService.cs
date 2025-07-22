@@ -1,8 +1,9 @@
 using PdsTakehome.Models;
+using PdsTakehome.Interfaces;
 
 namespace PdsTakehome.Services
 {
-    public class GameOptionsService
+    public class GameOptionsService : IGameOptions 
     {
         public GameOptions PromptForOptions()
         {
