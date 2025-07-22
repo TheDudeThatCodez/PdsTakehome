@@ -1,4 +1,18 @@
-﻿using PdsTakehome.Services;
+﻿/*
+ * Program.cs
+ * 
+ * Entry point for the PdsTakehome Tic-Tac-Toe game application.
+ * 
+ * This program initializes the game introduction and options services,
+ * prompts the user for game options, and manages the main game loop,
+ * allowing the user to play multiple rounds of Tic-Tac-Toe.
+ * 
+ * Author: Spencer Neveux
+ * Repository: https://github.com/TheDudeThatCodez/PdsTakehome
+ * 
+ */
+
+using PdsTakehome.Services;
 using PdsTakehome.Models;
 
 var gameIntroService = new GameIntroService();
