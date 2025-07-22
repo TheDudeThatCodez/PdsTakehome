@@ -46,3 +46,35 @@ You can run the application using either the provided Makefile or by running Doc
    ```sh
    docker-compose run --rm pds-takehome
    ```
+
+### Option 3: Building and Running Manually (Without Docker or Makefile)
+
+1. **Install .NET SDK**
+
+   Make sure you have the [.NET SDK](https://dotnet.microsoft.com/download) installed (version 9.0).
+
+   Check your installation:
+
+   ```sh
+   dotnet --version
+
+   ```
+
+2. **Restore Dependencies**
+
+   ```sh
+   dotnet restore
+
+   ```
+
+3. **Build the application**
+
+   ```sh
+   dotnet build
+
+   ```
+
+4. **Run the application**
+   ```sh
+   dotnet run --project src/PdsTakehome
+   ```

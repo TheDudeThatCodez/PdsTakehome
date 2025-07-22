@@ -9,8 +9,6 @@ namespace PdsTakehome.Tests
 
         public TicTacToeGameTests()
         {
-            _game = new TicTacToeGame();
-            _game.StartGame();  
         }
 
         [Fact]
