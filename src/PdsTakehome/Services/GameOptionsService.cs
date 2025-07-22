@@ -8,21 +8,27 @@ namespace PdsTakehome.Services
 
         public GameOptions PromptForOptions()
         {
-            Console.WriteLine("Select game type:");
-            Console.WriteLine("1) Standard 3x3");
-            Console.WriteLine("2) Custom size");
-            Console.Write("Choice: ");
-
-            string? choice = Console.ReadLine();
-            if (string.IsNullOrEmpty(choice) || (choice != "1" && choice != "2"))
+            while (true)
             {
-                Console.WriteLine("Invalid choice. Defaulting to Standard 3x3.");
-                return GameOptions.Standard();
-            }
+                Console.WriteLine("Select game type:");
+                Console.WriteLine("1) Standard 3x3");
+                Console.WriteLine("2) Custom size");
+                Console.Write("Choice: ");
 
-            return (choice?.Trim() == "2")
-                ? GameOptions.Custom(PromptForCustomSize())
-                : GameOptions.Standard();
+                string? choice = Console.ReadLine();
+                if (choice == "1")
+                {
+                    return GameOptions.Standard();
+                }
+                else if (choice == "2")
+                {
+                    return GameOptions.Custom(PromptForCustomSize());
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please enter 1 or 2.\n");
+                }
+            }
         }
 
         private int PromptForCustomSize()
