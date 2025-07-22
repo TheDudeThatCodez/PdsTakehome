@@ -3,18 +3,20 @@ namespace PdsTakehome.Models
     public class Board
     {
         public char[,] Cells { get; private set; }
+        public readonly int Size;
 
-        public Board()
+        public Board(int size = 3)
         {
-            Cells = new char[3, 3];
+            Size = size;
+            Cells = new char[size, size];
             InitializeBoard();
         }
 
         private void InitializeBoard()
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < Size; i++)
             {
-                for (int j = 0; j < 3; j++)
+                for (int j = 0; j < Size; j++)
                 {
                     Cells[i, j] = ' ';
                 }
@@ -23,15 +25,18 @@ namespace PdsTakehome.Models
 
         public void DisplayBoard()
         {
-            for (int i = 0; i < 3; i++)
+            Console.WriteLine("-----");
+            Console.WriteLine("Board");
+            Console.WriteLine("-----\n");
+            for (int i = 0; i < Size; i++)
             {
-                for (int j = 0; j < 3; j++)
-                {
-                    System.Console.Write(Cells[i, j]);
-                    if (j < 2) System.Console.Write("|");
-                }
-                System.Console.WriteLine();
-                if (i < 2) System.Console.WriteLine("-----");
+            for (int j = 0; j < Size; j++)
+            {
+                Console.Write(Cells[i, j]);
+                if (j < Size - 1) Console.Write("|");
+            }
+            Console.WriteLine();
+            if (i < Size - 1) Console.WriteLine(new string('-', Size * 2 - 1));
             }
         }
     }

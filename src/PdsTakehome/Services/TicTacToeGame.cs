@@ -1,12 +1,14 @@
 using PdsTakehome.Models;
 using PdsTakehome.Interfaces;
 
+namespace PdsTakehome.Services;
+
 public class TicTacToeGame : ITicTacToeGame
 {
-    private Board board;
+    private readonly Board board;
     private Player currentPlayer;
-    private Player playerX;
-    private Player playerO;
+    private readonly Player playerX;
+    private readonly Player playerO;
 
     public TicTacToeGame()
     {
@@ -18,51 +20,148 @@ public class TicTacToeGame : ITicTacToeGame
 
     public void StartGame()
     {
-        board = new Board();
-        currentPlayer = playerX;
+        while (true)
+        {
+            Console.Clear();
+            GetBoardDisplay();
+            Console.WriteLine($"\n{currentPlayer.Name}'s turn ({currentPlayer.Symbol}). Enter a position (row x col):");
+
+            try
+            {
+                Position position = GetPlayerInput();
+                UpdateBoard(position);
+                
+                if (CheckWinner())
+                {
+                    Console.Clear();
+                    GetBoardDisplay();
+                    Console.WriteLine($"\n{currentPlayer.Name} wins!");
+                    Console.WriteLine("Press Enter to exit...");
+                    Console.ReadLine();
+                    break;
+                }
+                
+                if (CheckTie())
+                {
+                    Console.Clear();
+                    GetBoardDisplay();
+                    Console.WriteLine("\nIt's a tie!");
+                    Console.WriteLine("Press Enter to exit...");
+                    Console.ReadLine();
+                    break;
+                }
+
+                SwitchPlayer();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine("Press Enter to try again...");
+                Console.ReadLine();
+            }
+        }
     }
 
-    public void GetPlayerInput()
+    public Position GetPlayerInput()
     {
-        // This method would typically get input from the user interface.
-        // For now, it's a placeholder.
+        var input = Console.ReadLine();
+        if (input == null)
+            throw new ArgumentNullException(nameof(input), "Input cannot be null.");
+
+        ValidateInput(input);
+        Position position = ParseInput(input);
+        return position;
     }
 
-    public void ValidateInput(int input)
+    public void ValidateInput(string input)
     {
-        // Input should be between 1 and 9 and the cell should be empty
-        if (input < 1 || input > 9)
-            throw new ArgumentOutOfRangeException("Input must be between 1 and 9.");
+        // Clean input to handle cases like "1x1", "1 X 1", etc.
+        var cleanedInput = input.Split([' ', 'x', 'X'], StringSplitOptions.RemoveEmptyEntries);
+        if (cleanedInput.Length < 2 || cleanedInput.Length > 2)
+        {
+            throw new ArgumentException("Invalid input format. Please enter in the format 'row x col'.");
+        }
 
-        int row = (input - 1) / 3;
-        int col = (input - 1) % 3;
-        if (board.Cells[row, col] != ' ')
-            throw new InvalidOperationException("Cell is already occupied.");
+        var row = int.Parse(cleanedInput[0]) - 1;
+        var col = int.Parse(cleanedInput[1]) - 1;
+        if (row < 0 || row > board.Size || col < 0 || col > board.Size)
+        {
+            throw new ArgumentException("Invalid position. Please enter a valid row and column.");
+        }
     }
 
-    public void UpdateBoard(int position)
+    public Position ParseInput(string input) 
     {
-        int row = (position - 1) / 3;
-        int col = (position - 1) % 3;
-        board.Cells[row, col] = currentPlayer.Symbol;
+        var cleanedInput = input.Split([' ', 'x', 'X'], StringSplitOptions.RemoveEmptyEntries);
+        var row = cleanedInput.Length > 0 ? int.Parse(cleanedInput[0]) - 1 : -1;
+        var col = cleanedInput.Length > 1 ? int.Parse(cleanedInput[1]) - 1 : -1;
+        return new Position(row, col);
+    }
+
+    public void UpdateBoard(Position position)
+    {
+        board.Cells[position.Row, position.Column] = currentPlayer.Symbol;
     }
 
     public bool CheckWinner()
     {
         char s = currentPlayer.Symbol;
         var c = board.Cells;
+        int size = board.Size;
 
-        // Check rows and columns
-        for (int i = 0; i < 3; i++)
+        // Check rows
+        for (int i = 0; i < size; i++)
         {
-            if ((c[i, 0] == s && c[i, 1] == s && c[i, 2] == s) ||
-                (c[0, i] == s && c[1, i] == s && c[2, i] == s))
-                return true;
+            bool rowWin = true;
+            for (int j = 0; j < size; j++)
+            {
+                if (c[i, j] != s)
+                {
+                    rowWin = false;
+                    break;
+                }
+            }
+            if (rowWin) return true;
         }
-        // Check diagonals
-        if ((c[0, 0] == s && c[1, 1] == s && c[2, 2] == s) ||
-            (c[0, 2] == s && c[1, 1] == s && c[2, 0] == s))
-            return true;
+
+        // Check columns
+        for (int j = 0; j < size; j++)
+        {
+            bool colWin = true;
+            for (int i = 0; i < size; i++)
+            {
+                if (c[i, j] != s)
+                {
+                    colWin = false;
+                    break;
+                }
+            }
+            if (colWin) return true;
+        }
+
+        // Check main diagonal
+        bool mainDiagWin = true;
+        for (int i = 0; i < size; i++)
+        {
+            if (c[i, i] != s)
+            {
+                mainDiagWin = false;
+                break;
+            }
+        }
+        if (mainDiagWin) return true;
+
+        // Check anti-diagonal
+        bool antiDiagWin = true;
+        for (int i = 0; i < size; i++)
+        {
+            if (c[i, size - 1 - i] != s)
+            {
+                antiDiagWin = false;
+                break;
+            }
+        }
+        if (antiDiagWin) return true;
 
         return false;
     }
@@ -82,7 +181,7 @@ public class TicTacToeGame : ITicTacToeGame
         currentPlayer = (currentPlayer == playerX) ? playerO : playerX;
     }
 
-    public void DisplayBoard()
+    public void GetBoardDisplay()
     {
         board.DisplayBoard();
     }
