@@ -86,7 +86,7 @@ public class TicTacToeGame : ITicTacToeGame
         var row = int.Parse(cleanedInput[0]) - 1;
         var col = int.Parse(cleanedInput[1]) - 1;
         if (row < 0 || row > board.Size || col < 0 || col > board.Size)
-            throw new ArgumentException("Invalid position. Please enter a valid row and column.");
+            throw new IndexOutOfRangeException("Invalid position. Please enter a valid row and column.");
 
         if (board.Cells[row, col] != ' ')
             throw new ArgumentException("Position already taken. Please choose another position.");

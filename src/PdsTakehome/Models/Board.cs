@@ -31,14 +31,14 @@ namespace PdsTakehome.Models
             Console.ForegroundColor = ConsoleColor.Cyan;
             for (int i = 0; i < Size; i++)
             {
-            for (int j = 0; j < Size; j++)
-            {
-                Console.Write(pad + Cells[i, j] + pad);
-                if (j < Size - 1) Console.Write("|");
-            }
-            Console.WriteLine();
-            if (i < Size - 1)
-                Console.WriteLine(new string('-', (Size * (cellPadding * 2 + 1)) + (Size - 1)));
+                for (int j = 0; j < Size; j++)
+                {
+                    Console.Write(pad + Cells[i, j] + pad);
+                    if (j < Size - 1) Console.Write("|");
+                }
+                Console.WriteLine();
+                if (i < Size - 1)
+                    Console.WriteLine(new string('-', (Size * (cellPadding * 2 + 1)) + (Size - 1)));
             }
         }
     }
